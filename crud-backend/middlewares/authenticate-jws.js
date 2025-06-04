@@ -1,8 +1,12 @@
+import { UserNotAuthorizedError } from "./errors/user-not-authorized.error";
+
+const error = new UserNotAuthorizedError();
+
 export async function authenticateToken (request, response, next, auth) {
     const jwt = request.headers.authorization;
 
     if(!jwt) {
-        response.status(401).json({message: 'Usuário não autorizado'});
+        response.status(error.code).json(error);
         return;
     }
 
@@ -10,7 +14,7 @@ export async function authenticateToken (request, response, next, auth) {
     try {
         decodedIdToken = await auth.verifyIdToken(jwt, true); // Verifica se o JWT é válido e se ainda não expirou
     } catch (e){
-        response.status(401).json({message: 'Usuário não autorizado'});
+        response.status(error.code).json(error);
         return;
     }
 

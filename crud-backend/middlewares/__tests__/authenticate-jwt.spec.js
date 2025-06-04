@@ -1,55 +1,94 @@
+import { UserNotAuthorizedError } from "../errors/user-not-authorized.error";
 import { authenticateToken } from "../authenticate-jws";
 
 describe ('Authenticate jwt', () => {
 
-    test ('given no authorization header, then return error 401', () => {
-        const request = {
-            headers: {}
-        };
-        const response = new ResponseMock();
-        const next = () => {};
+    let response;
+    let next;
+    
+    const request = { headers: { authorization: "" } };
 
-        authenticateToken(request, response, next);
-
-        expect(response._status).toEqual(401);
+    beforeEach (() => {
+        response = new ResponseMock();
+        next = () => {};
     })
 
-    test ('given authorization header, when invalid, then return error 401', async () => {
-        const request = {
-            headers: {authorization: 'invalid'}
-        };
-         const response = new ResponseMock();
-        const next = () => {};
+    describe ('given no authorization header', () => {
 
-        await authenticateToken(request, response, next, {
-            verifyIdToken: () => Promise.reject()
+        test ('then return error 401', () => {
+            authenticateToken(request, response, next);
+
+            expect(response._status).toEqual(401);
         });
 
-        expect(response._status).toEqual(401);
-    })
+        test ('then return error', () => {
+            authenticateToken(request, response, next);
 
-    test ('given authorization header, when valid, then add user to request', async () => {
-         const request = {
-            headers: {authorization: 'valid'}
-        };
-        const response = new ResponseMock();
-        const next = () => {};
-
-        await authenticateToken(request, response, next, {
-            verifyIdToken: () => ({ sub: 'anyUserUid' })
+            expect(response._json).toBeInstanceOf(UserNotAuthorizedError);
         });
 
-        expect(request.user).toEqual({ uid: 'anyUserUid' });
-    })
+    });
+
+    describe ('given authorization header', () => {
+
+        let auth;
+
+        // AINDA NÃO EXISTE
+        beforeEach (() => {
+            auth = new Authmock();
+        });
+
+        describe ('when invalid', () => {
+
+            beforeEach (() => {
+                request.headers.authorization = 'anyInvalidHeader';
+                auth._response = Promise.reject();
+            });
+
+            test ('then return error 401', async () => {
+                await authenticateToken(request, response, next, auth);
+
+                expect(response._status).toEqual(401);
+            });
+
+            test ('then return error', async () => {
+                await authenticateToken(request, response, next, auth);
+
+                expect(response._json).toBeInstanceOf(UserNotAuthorizedError);
+            });
+
+
+        });
+
+
+        test ('when valid, then add user to request', async () => {
+            request.headers.authorization = 'anyValidHeader';
+            auth._response = Promise.resolve({ sub: 'anyUserUid' });
+
+            await authenticateToken(request, response, next, auth);
+
+            expect(request.user).toEqual({ uid: 'anyUserUid' });
+        });
+
+        class Authmock {
+            _response;
+            verifyIdToken () {
+                return this._response;
+            }
+        };
+
+    });    
 
     class ResponseMock {
+        _json;
         _status;
         status (value) {
             this._status = value;
             return this;
         }
         json (value) {
-
+            this._json = value;
         }
-    }
+    };
+
 })
