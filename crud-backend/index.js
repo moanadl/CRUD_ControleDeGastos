@@ -2,7 +2,6 @@ import express, { json } from 'express';
 import admin from 'firebase-admin';
 import { transactionsRouter } from './transactions/routes.js';
 
-// REST API http://api.controle-de-gastos.com/transactions
 const app = express(); // Criou uma aplicação express
 
 admin.initializeApp({

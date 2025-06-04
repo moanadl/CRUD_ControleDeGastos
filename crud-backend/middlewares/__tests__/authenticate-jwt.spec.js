@@ -33,7 +33,6 @@ describe ('Authenticate jwt', () => {
 
         let auth;
 
-        // AINDA NÃO EXISTE
         beforeEach (() => {
             auth = new Authmock();
         });
