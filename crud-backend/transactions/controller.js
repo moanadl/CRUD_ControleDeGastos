@@ -17,7 +17,7 @@ export class TransactionController {
 
         return  this.#transaction.findByUser().then(transactions => {
                 // console.log(transactions)
-                response.json(transactions);
+                response.status(200).json(transactions);
             }).catch(error => {
                 response.status(error.code).json(error);
             })
@@ -28,7 +28,7 @@ export class TransactionController {
         this.#transaction.uid = request.params.uid;
         this.#transaction.user = request.user;
         // console.log('findByUid - Controller');
-        console.log('findByUid - Controller,', this.#transaction.user.uid);
+        //console.log('findByUid - Controller,', this.#transaction.user.uid);
 
         return this.#transaction.findByUid().then(() => {
             response.status(200).json(this.#transaction);
@@ -63,7 +63,7 @@ export class TransactionController {
         this.#transaction.user = request.user;
 
         return this.#transaction.delete().then(() => {
-            response.status(200);
+            response.status(200).json(this.#transaction);
         }).catch(error => {
             response.status(error.code).json(error);
         })
