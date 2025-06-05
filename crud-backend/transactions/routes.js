@@ -12,29 +12,29 @@ const transactionController = new TransactionController();
 
 app.get('/', 
     (request, response, next) => authenticateToken(request, response, next, admin.auth()), 
-    (request, response) => transactionController.findByUser(request, response)
+    (request, response) => new transactionController.findByUser(request, response)
 );
 
 app.get('/:uid',
     (request, response, next) => authenticateToken(request, response, next, admin.auth()),
-    (request, response) => transactionController.findByUid(request, response)
+    (request, response) => new transactionController.findByUid(request, response)
 );
 
 app.post('/',
     (request, response, next) => validateTransaction(request, response, next),
     (request, response, next) => authenticateToken(request, response, next, admin.auth()),
-    (request, response) => transactionController.create(request, response)
+    (request, response) => new transactionController.create(request, response)
 );
 
 app.patch('/:uid',
     (request, response, next) => validateTransaction(request, response, next),
     (request, response, next) => authenticateToken(request, response, next, admin.auth()),
-    (request, response) => transactionController.update(request, response)
+    (request, response) => new transactionController.update(request, response)
 );
 
 app.delete('/:uid',
     (request, response, next) => authenticateToken(request, response, next, admin.auth()),
-    (request, response) => transactionController.delete(request, response)
+    (request, response) => new transactionController.delete(request, response)
 )
 
 export const transactionsRouter = app;
