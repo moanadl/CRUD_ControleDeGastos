@@ -1,6 +1,5 @@
 import { validateTransaction } from "../create-transaction.validator";
 import { BadRequestError } from "../../errors/bad-request.error";
-// import { BadRequestError } from "./../errors/bad-request-error";
 
 describe ('Create transaction validator', () => {
 
@@ -18,7 +17,7 @@ describe ('Create transaction validator', () => {
             type: 'income'
         }};
         response = new ResponseMock();
-    })
+    });
 
     test ('given date not informed, then return 400 error', () => {     
         request.body.date = null;   
@@ -141,11 +140,11 @@ describe ('Create transaction validator', () => {
         _status = 0;
         json(value) {
             this._json = value;
-        }
+        };
         status(value) {
             this._status = value;
-            return this
-        }
-    }
+            return this;
+        };
+    };
 
-})
+});
