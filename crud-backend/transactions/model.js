@@ -12,6 +12,7 @@ export class Transaction {
     money;
     transactionType;
     type;
+    uid;
     user;
 
     #repository;
@@ -19,7 +20,7 @@ export class Transaction {
     constructor (transactionRepository) {
         // Caso o argumento 'transactionRepository' tenha sido informado, use ele. Caso contrário use uma instância do TransactionRepository. Isso foi feito para possibilitar o teste
         this.#repository = transactionRepository || new TransactionRepository(); // Vai pegar os dados
-    }
+    };
 
     findByUser () {
 
@@ -27,36 +28,38 @@ export class Transaction {
         // console.log('findByUser - Model,', this.user.uid); // Funciona!!!
         if (!this.user?.uid) {
             return Promise.reject(new UserNotInformedError());
-        }
+        };
 
         // console.log(this.#repository.findByUserId(this.user.uid));
         return this.#repository.findByUserUid(this.user.uid);
        
-    }
+    };
 
     findByUid () {
 
         if (!this.uid) {
             return Promise.reject(new TransactionUidNotInformedError());
-        }
+        };
         // console.log('findByUid - Model');
-        console.log('findByUid - Model,', this.user.uid);
+        //console.log('findByUid - Model,', this.user.uid);
 
         return this.#repository.findByUid(this.uid).then(transactionDB => {
             if (!transactionDB) {
                 return Promise.reject(new TransactionNotFoundError());
             };
+
             if (this.user.uid != transactionDB.user.uid) {
                 return Promise.reject(new UserDoesntOwnTransactionError());
-            }
+            };
+
             this.date = transactionDB.date;
             this.description = transactionDB.description;
             this.money = transactionDB.money;
             this.transactionType = transactionDB.transactionType;
             this.type = transactionDB.type;
             this.user = transactionDB.user;
-        })
-    }
+        });
+    };
 
     create (params) {
         this.date = params.date;
@@ -68,8 +71,8 @@ export class Transaction {
         
         return this.#repository.save(this).then(response => {
             this.uid = response.uid;
-        })
-    }
+        });
+    };
 
     update (params) {
 
@@ -79,18 +82,18 @@ export class Transaction {
             this.money = params.money;
             this.transactionType = params.transactionType;
             this.type = params.type;
-            this.user = params.user;
+            //this.user = params.user;
 
             return this.#repository.update(this);
 
-        })
+        });
         
-    }
+    };
 
     delete () {
         return this.findByUid().then(() => {
             return this.#repository.delete(this);
-        })
-    }
+        });
+    };
 
-}
+};
