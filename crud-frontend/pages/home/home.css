@@ -2,6 +2,12 @@ body {
     height: 100vh;
 }
 
+button.danger {
+    width: auto;
+    float: right;
+    display: none;
+}
+
 ol {
     list-style: none;
     padding: 0;
@@ -29,13 +35,6 @@ ol li.income {
 ol li:hover button.danger {
     display: block;
 }
-
-button.danger {
-    width: auto;
-    float: right;
-    display: none;
-}
-
 
 p {
     margin: 4px 0;

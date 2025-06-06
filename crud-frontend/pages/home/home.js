@@ -1,28 +1,31 @@
-function logout () { // Fazer o logout do usuário e mandá-lo para a página inicial de login
+// ----- Calls firebase to logout user ----- //
+function logout () { 
     firebase.auth().signOut().then(() => {
         window.location.href = '../../index.html';
     }).catch(() => {
         alert('Erro ao fazer logout');
-    })
-}
+    });
+};
 
+// ----- Checks if user is logged ----- //
 firebase.auth().onAuthStateChanged(user => {
-    if (user) { // Se o usuário estiver logado
-        user.getIdToken().then(token => console.log(token)); // Pega o JWS do usuário logado
+    if (user) { 
         findTransactions(user);
-    }
-})
+    };
+});
 
+// ----- Sends user to transactions page ----- //
 function newTransaction () {
-    // firebase.auth().currentUser.getIdToken().then(token => console.log('batata', token));
     window.location.href = '../transaction/transaction.html';
 }
 
+// ----- Gets and displays transactions ----- //
+
+// Calls firebase to get transactions
 function findTransactions (user) {
     showLoading();
-    console.log(user);
     transactionService.findByUser(user)
-    .then(transactions => { // Ainda é uma promise pois depende do firebase
+    .then(transactions => {
         hideLoading();
         addTransactionsToScreen(transactions);
     })
@@ -30,9 +33,10 @@ function findTransactions (user) {
         hideLoading();
         console.log(error);
         alert('Erro ao recuperar transações')
-    })
-}
+    });
+};
 
+// Calls firebase to add the found transactions to the sreen
 function addTransactionsToScreen (transactions) {
     const orderedList = document.getElementById('transactions');
 
@@ -44,11 +48,12 @@ function addTransactionsToScreen (transactions) {
         li.appendChild(createParagraph(transaction.type));
         if (transaction.description) {
             li.appendChild(createParagraph(transaction.description));
-        }
+        };
         orderedList.appendChild(li);
     });
-}
+};
 
+// Creates a li element for each found transaction
 function createTransactionListItem (transaction) {
     const li = document.createElement('li');
     li.classList.add(transaction.type);
@@ -57,8 +62,9 @@ function createTransactionListItem (transaction) {
         window.location.href = '../transaction/transaction.html?uid=' + transaction.uid;
     })
     return li;
-}
+};
 
+// Creates a delete button for each transaction
 function createDeleteButton (transaction) {
     const deleteButton = document.createElement('button');
     deleteButton.innerHTML = 'Remover';
@@ -67,22 +73,27 @@ function createDeleteButton (transaction) {
         event.stopPropagation();
         askRemoveTransaction(transaction);
     })
-    return deleteButton
+    return deleteButton;
 }
 
+// Creates a paragraph element
 function createParagraph (value) {
     const element = document.createElement('p');
     element.innerHTML = value;
     return element;
-}
+};
 
+// ----- Removes transaction ----- //
+
+// Asks confirmation to remove transaction
 function askRemoveTransaction (transaction) {
     const shouldRemove = confirm('Deseja remover a transação?');
     if (shouldRemove) {
         removeTransaction(transaction);
-    }
-}
+    };
+};
 
+// Calls firebase to remove transaction
 function removeTransaction (transaction) {
     showLoading();
 
@@ -95,15 +106,14 @@ function removeTransaction (transaction) {
         hideLoading();
         console.log(error);
         alert('Erro ao remover transação');
-    })
-}
+    });
+};
 
-
-// ----- Formata data e dinheiro ----- //
+// ----- Formats date and money ----- //
 function formatDate (date) {
     return new Date(date).toLocaleDateString('en-US', {timeZone: "utc"});
-}
+};
 
 function formatMoney (money) {
     return  `${money.currency} ${money.value.toFixed(2)}`;
-}
+};
