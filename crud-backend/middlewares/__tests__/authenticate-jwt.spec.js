@@ -11,7 +11,7 @@ describe ('Authenticate jwt', () => {
     beforeEach (() => {
         response = new ResponseMock();
         next = () => {};
-    })
+    });
 
     describe ('given no authorization header', () => {
 
@@ -90,4 +90,4 @@ describe ('Authenticate jwt', () => {
         }
     };
 
-})
+});
