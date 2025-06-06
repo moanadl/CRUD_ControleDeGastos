@@ -1,8 +1,9 @@
-// Contém a lógica de acesso aos dados do BD ou de APIs de terceiros
 import admin from 'firebase-admin';
 
+// ----- Calls firebase to access DB ----- //
 export class TransactionRepository {
 
+    // Calls firebase to acess user's transactions
     findByUserUid (uid) {
         return admin.firestore()
             .collection('transactions')
@@ -17,6 +18,7 @@ export class TransactionRepository {
             });
     };
 
+    // Calls firebase to acess specific transaction
     findByUid (uid) {
         return admin.firestore()
             .collection('transactions')
@@ -25,6 +27,7 @@ export class TransactionRepository {
             .then(snapshot => snapshot.data());
     };
 
+    // Calls firebase to create new transaction
     save (transaction) {
         return admin.firestore()
             .collection('transactions')
@@ -32,6 +35,7 @@ export class TransactionRepository {
             .then(response => ( { uid: response.id }));
     };
 
+    // Calls firebase to update transaction
     update (transaction) {
         return admin.firestore()
         .collection('transactions')
@@ -45,6 +49,7 @@ export class TransactionRepository {
         });
     };
 
+    // Calls remove transaction
     delete (transaction) {
         return admin.firestore()
             .collection('transactions')

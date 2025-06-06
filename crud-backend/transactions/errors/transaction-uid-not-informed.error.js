@@ -4,5 +4,6 @@ export class TransactionUidNotInformedError extends Error {
         super('Uid da transação não informado');
         this.name = 'transaction-uid-not-informed';
         this.code = 500;
-    }
-}
+    };
+
+};

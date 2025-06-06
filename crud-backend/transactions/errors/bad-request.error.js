@@ -5,5 +5,6 @@ export class BadRequestError extends Error {
         this.message = description;
         this.name = 'bad-request';
         this.code = 400;
-    }
-}
+    };
+    
+};

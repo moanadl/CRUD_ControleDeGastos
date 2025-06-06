@@ -79,7 +79,7 @@ describe ('Create transaction validator', () => {
         expect(response._json).toBeInstanceOf(BadRequestError);
     });
 
-     test ('given invalid value, then return 400 error', () => {     
+    test ('given invalid value, then return 400 error', () => {     
         request.body.money.value = 'invalidValue';   
         validateTransaction(request, response);
         expect(response._status).toEqual(400);

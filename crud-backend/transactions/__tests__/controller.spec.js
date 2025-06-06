@@ -360,7 +360,7 @@ describe ('Transaction controller', () => {
         };
         status(value) {
             this._status = value;
-            return this
+            return this;
         };
     };
 
