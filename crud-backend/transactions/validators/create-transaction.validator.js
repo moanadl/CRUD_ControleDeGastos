@@ -15,16 +15,16 @@ export function validateTransaction (request, response, next) {
 
     // Checks if money is not empty valid and in the right format
     const money = request.body.money;
-    const currency = request.body.money.currency;
-    const value = request.body.money.value;
     if (!money) {
         return response.status(400).json(new BadRequestError('Dinheiro não informado'));
     };
 
+    const currency = request.body.money.currency;
     if (!currency) {
         return response.status(400).json(new BadRequestError('Moeda não informada'));
     };
 
+    const value = request.body.money.value;
     if (!value) {
         return response.status(400).json(new BadRequestError('Valor não informado'));
     };
